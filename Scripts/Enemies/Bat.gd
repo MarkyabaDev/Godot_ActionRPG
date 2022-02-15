@@ -4,6 +4,8 @@ var knockback = Vector2.ZERO
 
 onready var stats = $Stats
 
+const enemyDeathEffect = preload("res://Scenes/Effects/EnemyDeathEffect.tscn")
+
 func _ready():
 	print(stats.maxHealth)
 	print(stats.health)
@@ -19,3 +21,9 @@ func _on_Hurtbox_area_entered(area:Area2D):
 
 func _on_Stats_no_health():
 	queue_free()
+	create_death_effect()
+
+func create_death_effect():
+	var enemyDeathEffectInstance = enemyDeathEffect.instance()
+	get_parent().add_child(enemyDeathEffectInstance)
+	enemyDeathEffectInstance.global_position = global_position
