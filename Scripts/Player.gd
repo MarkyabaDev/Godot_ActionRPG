@@ -26,11 +26,13 @@ var state = MOVE
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
+onready var swordHitbox = $HitboxPivot/SwordHitbox
 
 # Called when the node enters the scene tree for the first time. 
 # Similar to the Start() function in Unity.
 func _ready():
 	animationTree.active = true
+	swordHitbox.knockbackVector = rollVector
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -56,6 +58,7 @@ func move_state(delta):
 
 	if inputVector != Vector2.ZERO:
 		rollVector = inputVector
+		swordHitbox.knockbackVector = inputVector
 
 		# Needs to be here, because it snaps back to left.
 		animationTree.set("parameters/Idle/blend_position", inputVector)
