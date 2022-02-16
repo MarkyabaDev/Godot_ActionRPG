@@ -18,7 +18,7 @@ enum {
 var velocity = Vector2.ZERO
 var rollVector = Vector2.LEFT
 var state = MOVE
-
+var stats = PlayerStats
 
 
 # Onready var is only created if the Node (AnimationPlayer here) is ready.
@@ -27,10 +27,12 @@ onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 onready var swordHitbox = $HitboxPivot/SwordHitbox
+onready var hurtbox = $Hurtbox
 
 # Called when the node enters the scene tree for the first time. 
 # Similar to the Start() function in Unity.
 func _ready():
+	stats.connect("no_health", self, "queue_free")
 	animationTree.active = true
 	swordHitbox.knockbackVector = rollVector
 
@@ -98,3 +100,8 @@ func roll_animation_finished():
 
 func move():
 	velocity = move_and_slide(velocity)
+
+func _on_Hurtbox_area_entered(area:Area2D):
+	stats.health -= 1
+	hurtbox.start_invincibility(0.5)
+	hurtbox.create_hit_effect()
