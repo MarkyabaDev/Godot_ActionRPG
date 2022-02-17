@@ -39,6 +39,8 @@ func _on_Timer_timeout():
 
 func _on_Hurtbox_invicibility_started():
 	# Has been changed in later versions from monitorable to monitoring
+	# set_deferred defers the setting of this property to the end of the physics process.
+	# Turning monitoring off and on again reinitiates the check if something is in the hurtbox
 	set_deferred("monitoring", false)
 
 
