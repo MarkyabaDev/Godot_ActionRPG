@@ -4,6 +4,8 @@ extends KinematicBody2D
 # var a = 2
 # var b = "text"
 
+const playerHurtSound = preload("res://Scenes/Sounds/PlayerHurtSound.tscn")
+
 export var MAX_SPEED = 100
 export var ROLL_SPEED = 150
 export var ACCELERATION = 500
@@ -28,6 +30,7 @@ onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 onready var swordHitbox = $HitboxPivot/SwordHitbox
 onready var hurtbox = $Hurtbox
+onready var blinkAnimationPlayer = $BlinkAnimationPlayer
 
 # Called when the node enters the scene tree for the first time. 
 # Similar to the Start() function in Unity.
@@ -103,6 +106,16 @@ func move():
 	velocity = move_and_slide(velocity)
 
 func _on_Hurtbox_area_entered(area:Area2D):
-	stats.health -= 1
-	hurtbox.start_invincibility(0.5)
+	stats.health -= area.damage
+	hurtbox.start_invincibility(1)
 	hurtbox.create_hit_effect()
+	var playerHurtSoundInstance = playerHurtSound.instance()
+	get_tree().current_scene.add_child(playerHurtSoundInstance)
+
+
+func _on_Hurtbox_invicibility_ended():
+	blinkAnimationPlayer.play("Stop")
+
+
+func _on_Hurtbox_invicibility_started():
+	blinkAnimationPlayer.play("Start")
