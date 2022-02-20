@@ -5,6 +5,7 @@ const hitEffect = preload("res://Scenes/Effects/HitEffect.tscn")
 var invicibility = false setget set_invincible, get_invincible
 
 onready var timer = $Timer
+onready var collisionShape = $CollisionShape2D
 
 signal invicibility_started
 signal invicibility_ended
@@ -41,8 +42,10 @@ func _on_Hurtbox_invicibility_started():
 	# Has been changed in later versions from monitorable to monitoring
 	# set_deferred defers the setting of this property to the end of the physics process.
 	# Turning monitoring off and on again reinitiates the check if something is in the hurtbox
-	set_deferred("monitoring", false)
+	# set_deferred("monitoring", false)
+	collisionShape.set_deferred("disabled", true)
 
 
 func _on_Hurtbox_invicibility_ended():
-	monitoring = true
+	#monitoring = true
+	collisionShape.disabled = false
